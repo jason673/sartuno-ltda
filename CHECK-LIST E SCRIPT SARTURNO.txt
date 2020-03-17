@@ -1,0 +1,172 @@
+CONFIGURA플O DA TOPOLOGIA SARTURNO
+
+1캰ASSO-MOTAR A TOPOLOGIA COM:
+1 RT.
+3 SWS.
+2 PCs EM CADA SW.
+
+2캰ASSO-COLOCAR IP,MASCARA E GATEWAY EM CADA PC.
+
+3캰ASSO-CONFIGURAR SW-01.
+
+4캰ASSO-CONFIGURAR SW-02.
+
+5캰ASSO-CONFIGURAR SW-03.
+
+6캰ASSO-CONFIGURAR RT-01.
+
+7캰ASSO-FAZER PING DA REDE.
+
+
+CONFIGURA플O DO RT-01
+
+ENABLE
+CONFIGURE TERMINAL
+HOSTNAME RT-01
+ENABLE SECRET Sarturno*Enable 
+ip domain-name sarturno.local
+no ip domain-lookup
+banner motd "ATENCAO! APENAS O DEPARTAMENTO DE TI DA EMPRESA SARTUNO LTDA. TEM A AUTORIZACAO PARA ACESSAR ESSE EQUIPAMENTO!"
+crypto key generate rsa general-keys modulus 1024
+username sarturnoti privilege 15 secret batata*00
+service password-encryption
+line vty 0 15
+password Sarturno*VTY
+transport input ssh
+login local
+exit
+line console 0
+password Sarturno*Console
+login local
+exit
+interface g0/0
+ip address 172.16.15.1 255.255.255.0	
+no shutdown
+description CONECTADA A INTERFACE G0/1 DO SW-01
+EXIT
+interface g0/1
+ip address 192.168.0.1 255.255.0.0
+no shutdown
+description CONECTADA A INTERFACE G0/1 DO SW-02
+exit
+interface g0/2
+ip address 172.16.10.1 255.255.255.0
+no shutdown
+description CONECTADA A INTERFACE G0/1 DO SW-03
+EXIT
+end 
+wr
+
+
+CONFIGURA플O DO SW-01
+
+ENABLE
+CONFIGURE TERMINAL
+HOSTNAME SW-01
+ENABLE SECRET Sarturno*Enable 
+ip domain-name sarturno.local
+no ip domain-lookup
+banner motd "ATENCAO! APENAS O DEPARTAMENTO DE TI DA EMPRESA SATURNO LTDA. TEM A AUTORIZACAO PARA ACESSAR ESSE EQUIPAMENTO!"
+crypto key generate rsa general-keys modulus 1024
+username sarturnoti privilege 15 secret batata*00
+service password-encryption
+ip default-gateway 172.16.15.1
+line vty 0 15
+password Sarturno*VTY
+transport input ssh
+login local
+exit
+line console 0
+password Sarturno*Console
+login local
+exit
+interface vlan 1
+ip address 172.16.15.254 255.255.255.0
+no shutdown
+description INTERFACE DE GERENCIAMENTO
+exit
+interface f0/1
+description CONECTADA AO PC-01
+EXIT
+interface f0/02
+description CONECTADA AO PC-02
+exit
+end
+wr
+ip default-gateway 172.16.15.1
+exit 
+wr
+
+
+CONFIGURA플O DO SW-02
+
+ENABLE
+CONFIGURE TERMINAL
+hostname SW-02
+ENABLE SECRET Sarturno*Enable 
+ip domain-name sarturno.local
+no ip domain-lookup
+banner motd "ATENCAO! APENAS O DEPARTAMENTO DE TI DA EMPRESA SATURNO LTDA. TEM A AUTORIZACAO PARA ACESSAR ESSE EQUIPAMENTO!"
+crypto key generate rsa general-keys modulus 1024
+username sarturnoti privilege 15 secret batata*00
+ip default-gateway 192.168.0.1
+service password-encryption
+line vty 0 15
+password Sarturno*VTY
+transport input ssh
+login local 
+exit
+line console 0
+password Sarturno*Console
+login local
+exit
+interface vlan 1
+ip address 192.168.255.254 255.255.0.0
+no shutdown
+description INTERFACE DE GERENCIAMENTO
+exit
+interface f0/01
+description CONECTADA AO PC-03
+EXIT
+interface f0/02
+description CONECTADA AO PC-04
+exit
+end
+wr
+
+
+CONFIGURA플O DO SW-03
+
+ENABLE
+CONFIGURE TERMINAL
+hostname SW-03
+ENABLE SECRET Sarturno*Enable 
+ip domain-name sarturno.local
+no ip domain-lookup
+banner motd "ATENCAO! APENAS O DEPARTAMENTO DE TI DA EMPRESA SATURNO LTDA. TEM A AUTORIZACAO PARA ACESSAR ESSE EQUIPAMENTO!"
+crypto key generate rsa general-keys modulus 1024
+username sarturnoti privilege 15 secret batata*00
+service password-encryption
+ip default-gateway 172.16.10.1
+line vty 0 15
+password Sarturno*VTY
+transport input ssh
+login local
+exit
+line console 0
+password Sarturno*Console
+login local
+exit
+interface vlan 1
+ip address 172.16.10.254 255.255.255.0
+no shutdown
+description INTERFACE DE GERENCIAMENTO
+exit
+interface f0/01
+description CONECTADA AO PC-05
+EXIT
+interface f0/02
+description CONECTADA AO PC-06
+exit
+end
+wr
